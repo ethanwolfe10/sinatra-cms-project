@@ -1,0 +1,13 @@
+<h1> Welcome <%= @current_doctor.username.capitalize! %>! </h1>
+
+<h3> Here is <%= @dog.name.capitalize! %>'s information: </h3>
+
+    <ul>
+        <li>Breed: <%= @dog.breed.name %> </li>
+        <li>Age: <%= @dog.age %></li>
+        <li>Shelter: <%= @dog.shelter.name %> </li>
+            <ol>
+                <li> Address: <%= @dog.shelter.address %> </li>
+                <li> Website: <%= @dog.shelter.website %> </li>
+            </ol>
+    </ul>
