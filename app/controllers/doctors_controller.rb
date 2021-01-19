@@ -4,12 +4,17 @@ class DoctorsController < ApplicationController
         #if not logged in then view signup page
         #if all params are filled then create new doctor and log them in
         #else redirect to signup or '/doctors'
-        
+        if !session[:user_id]
+            erb :'/doctors/create_doctor'
+        else
+            current_user = Doctor.find_by(id: session[:user_id])
+            redirect "/doctors/#{current_user.slug}"
+        end
     end
 
     post '/doctors/signup' do
         if !params[:username].empty? && !params[:email].empty? && !params[:password].empty?
-            current_user = User.create(params)
+            current_user = Doctor.create(params)
             session[:user_id] = current_user.id
             redirect "/doctors/#{current_user.slug}"
         else
