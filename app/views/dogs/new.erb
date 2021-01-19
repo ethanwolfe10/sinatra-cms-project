@@ -1,0 +1,51 @@
+<h1> Welcome <%= @current_doctor.username %>! </h1>
+
+<h3>Add a new dog to your list of patients: </h3>
+
+<form method='POST' action='/dogs'>
+
+    <label>Enter Dog Name: </label>
+    <input type='text' name='dog_name' id='dog_name'>
+
+    <label>Enter Dog Age: </label>
+    <input type='text' name='dog_age' id='dog_age'>
+
+    <br>
+    <br>
+
+    <label>Select The Dog Breed: </label>
+
+        <% @breeds.each do |breed| %>
+            <input type='checkbox' name='breed_id' id='breed_<%= breed.id %>' value='<%= breed.id %>'> <%= breed.name %><br>
+        <% end %>
+
+    <h3> Or Create A New Breed: </h3>
+    
+    <label>Breed Name: </label>
+    <input type='text' name='breed_name' id='breed_name'>
+
+    <br>
+    <br>
+
+    <label>Select The Shelter The New Dog Belongs To: </label>
+
+        <% @shelters.each do |shelter| %>
+            <input type='checkbox' name='shelter_id' id='shelter_<%= shelter.id %>' value='<%= shelter.id %>'><%= shelter.name %><br>
+        <% end %>
+
+    <h3> Or Create A New Shelter: </h3>
+
+    <label> Shelter Name: </label>
+    <input type='text' name='shelter[shelter_name]' id='shelter[shelter_name]'>
+    <br>
+
+    <label> Shelter Address: </label>
+    <input type='text' name='shelter[shelter_address]' id='shelter[shelter_address]'>
+    <br>
+
+    <label> Shelter Website: </label>
+    <input type='text' name='shelter[shelter_website]' id='shelter[shelter_website]'>
+    <br>
+    <input type='submit' value='Create Dog' id='submit'>
+</form>
+        
