@@ -1,0 +1,19 @@
+<% if !Helpers.is_logged_in?(session) %>
+    <form method='POST' action='/doctors/signup'>
+        
+        <label>Create Username: </label>
+        <input type='text' name='username' id='username'>
+        
+        <br>
+
+        <label>Enter Email: </label>
+        <input type='text' name='email' id='email'>
+        
+        <br>
+
+        <label>Create Password: </label>
+        <input type='text' name='password' id='password'>
+        
+        <input type='submit' value='Create User' id='submit'>
+    </form>
+<% end %>
