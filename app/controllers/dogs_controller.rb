@@ -26,28 +26,31 @@ class DogsController < ApplicationController
     post '/dogs' do
         #create a new dog with params
         if session[:user_id]
-            if !params["shelter_id"] == ''
-                if !params["breed_name"].empty?
-                    #need to check to see if breed is already in database before creating a new one
-                    new_breed = Breed.create(name: params["breed_name"])
-                    new_breed.save
-                    new_dog = Dog.create(name: params["dog_name"], age: params["dog_age"], breed_id: new_breed.id, shelter_id: params["shelter_id"])
-                    new_dog.save
-                else
-                    new_dog = Dog.create(name: params["dog_name"], age: params["dog_age"], breed_id: params["breed_id"], shelter_id: params["shelter_id"])
-                    new_dog.save
-                end  
-            else
+            if params["shelter"]["shelter_name"] != ''
+                binding.pry
                 #need to check to see if shelter is already in database before creating a new one
                 new_shelter = Shelter.create(name: params["shelter"]["shelter_name"], website: params["shelter"]["shelter_website"], address: params["shelter"]["shelter_address"])
                 new_shelter.save
-                if !params["breed_name"].empty?
+                if !params["breed_name"] == ''
+                    #need to check to see if breed is already in database before creating a new one
                     new_breed = Breed.create(name: params["breed_name"])
                     new_breed.save
                     new_dog = Dog.create(name: params["dog_name"], age: params["dog_age"], breed_id: new_breed.id, shelter_id: new_shelter.id)
                     new_dog.save
                 else
                     new_dog = Dog.create(name: params["dog_name"], age: params["dog_age"], breed_id: params["breed_id"], shelter_id: new_shelter.id)
+                    new_dog.save
+                end  
+            else
+                binding.pry                
+                if !params["breed_name"] == ''
+                    # binding.pry
+                    new_breed = Breed.create(name: params["breed_name"])
+                    new_breed.save
+                    new_dog = Dog.create(name: params["dog_name"], age: params["dog_age"], breed_id: new_breed.id, shelter_id: params["shelter_id"])
+                    new_dog.save
+                else
+                    new_dog = Dog.create(name: params["dog_name"], age: params["dog_age"], breed_id: params["breed_id"], shelter_id: params["shelter_id"])
                     new_dog.save
                 end 
             end
