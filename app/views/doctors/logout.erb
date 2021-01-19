@@ -1,0 +1,8 @@
+<% if Helpers.is_logged_in?(session) %>
+
+  <form action="/logout" method="post">
+    Logout?
+    <input type="submit" name="logout" >
+  </form>
+
+<% end %>

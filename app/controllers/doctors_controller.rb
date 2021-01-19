@@ -1,9 +1,9 @@
+
+
 class DoctorsController < ApplicationController
 
-    get '/doctors/signup' do
-        #if not logged in then view signup page
-        #if all params are filled then create new doctor and log them in
-        #else redirect to signup or '/doctors'
+
+    get "/doctors/signup" do
         if !session[:user_id]
             erb :'/doctors/create_doctor'
         else
@@ -23,13 +23,37 @@ class DoctorsController < ApplicationController
     end
 
     get '/doctors/login' do
-        #if not logged in then view login page
-        #else redirect to '/login'
+        if !session[:user_id]
+            erb :'/doctors/login'
+        else
+            current_user = Doctor.find_by(id: session[:user_id])
+            redirect "/doctors/#{current_user.slug}"
+        end
     end
 
     post '/login' do
-        #take params check for match then log in with session[:user_id]
-        #redirect to '/doctors'
+        current_user = Doctor.find_by(username: params[:username])
+        if current_user && current_user.authenticate(params[:password])
+            session[:user_id] = current_user.id
+            redirect "/doctors/#{current_user.slug}"
+        else
+            redirect '/doctors/login'
+        end
+    end
+
+    get '/doctors/logout' do
+        if session[:user_id]
+            erb :'/doctors/logout'
+        end
+    end
+
+    post '/logout' do
+        if session[:user_id] 
+            session.clear
+            redirect '/doctors/login'
+        else
+            redirect '/doctors/login'
+        end
     end
 
     get '/doctors/:slug' do
