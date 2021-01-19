@@ -24,12 +24,13 @@ class DogsController < ApplicationController
     end
 
     post '/dogs' do
-        
+        current_doctor = Doctor.find_by(id: session[:user_id])
         if session[:user_id]
             if params["shelter"]["shelter_name"] != ''
                 #need to check to see if shelter is already in database before creating a new one
                 new_shelter = Shelter.create(name: params["shelter"]["shelter_name"], website: params["shelter"]["shelter_website"], address: params["shelter"]["shelter_address"])
                 new_shelter.save
+                selected_shelter.doctors << current_doctor
                 if !params["breed_name"] == ''
                     #need to check to see if breed is already in database before creating a new one
                     new_breed = Breed.create(name: params["breed_name"])
@@ -39,9 +40,12 @@ class DogsController < ApplicationController
                 else
                     new_dog = Dog.create(name: params["dog_name"], age: params["dog_age"], breed_id: params["breed_id"], shelter_id: new_shelter.id)
                     new_dog.save
-                end
-                new_dog.doctor_ids = session[:user_id]  
-            else          
+                end  
+            else
+                selected_shelter = Shelter.find_by(id: params["shelter_id"])
+                if !selected_shelter.doctors.include?(current_doctor)
+                    selected_shelter.doctors << current_doctor
+                end          
                 if params["breed_name"] != ''
                     new_breed = Breed.create(name: params["breed_name"])
                     new_breed.save
@@ -50,9 +54,9 @@ class DogsController < ApplicationController
                 else
                     new_dog = Dog.create(name: params["dog_name"], age: params["dog_age"], breed_id: params["breed_id"], shelter_id: params["shelter_id"])
                     new_dog.save
-                end
-                new_dog.doctor_ids = session[:user_id] 
+                end 
             end
+            binding.pry
             redirect "/dogs/#{new_dog.slug}"
         else
             redirect '/doctors/login'
