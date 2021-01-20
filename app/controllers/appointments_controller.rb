@@ -20,6 +20,7 @@ class AppointmentsController < ApplicationController
     get '/appointments/:slug' do
         #if logged in view all appts for doctor
         if session[:user_id]
+            @dogs = []
             @current_doctor = Doctor.find_by_slug(params[:slug])
             @appts = DoctorDog.all.select {|appt| appt.doctor_id == session[:user_id]}
             erb :'/appointments/show'

@@ -1,0 +1,10 @@
+<h1> Welcome <%= @current_doctor.username %>! </h1>
+
+<h3>Here Are Your Upcoming Appointments: </h3>
+<ol>
+    <% @appts.each do |appt| %>
+        <% dog = Dog.find_by(id: appt.dog_id) %>
+        <li>-<%= dog.name %> the <%= dog.breed.name %> (<%= appt.date %> at <%= appt.time %> @ <%= dog.shelter.name %>)</li>
+        <br>
+    <% end %>
+</ol>
