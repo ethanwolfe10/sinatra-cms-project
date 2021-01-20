@@ -27,7 +27,7 @@ class AppointmentsController < ApplicationController
         #creates appt with doctor_id and dog_id
         if session[:user_id]
             @current_doctor = Doctor.find_by(id: session[:user_id])
-           new_appt = DoctorDog.create(doctor_id: session[:user_id], dog_id: params["appt_dog"])
+           new_appt = DoctorDog.create(doctor_id: session[:user_id], dog_id: params["appt_dog"], date: params["date"], time: params["time"])
            binding.pry
            redirect "/appointments/#{@current_doctor.slug}"
         else

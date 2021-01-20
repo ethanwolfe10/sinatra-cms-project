@@ -8,5 +8,12 @@
         <input type='checkbox' name='appt_dog' id='dog_<%= dog.id %>' value='<%= dog.id %>'><%= dog.name.capitalize! %> the <%= dog.breed.name %> (Shelter: <%= dog.shelter.name %>)
         <br>
     <% end %>
+    <br>
+    <br>
+    <h3>Enter In Date/Time of Appointment </h3>
+    <label>Date: </label>
+    <input type='text' id='date' name='date' value='MM/DD/YYYY'>
+    <label>Time: </label>
+    <input type='text' id='time' name='time' value='TI:ME'>
     <input type='submit' value='Create Appointment' id='submit'>
 </form>
