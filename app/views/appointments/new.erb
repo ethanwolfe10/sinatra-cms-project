@@ -1,0 +1,12 @@
+<h1> Welcome <%= @current_doctor.username %>! </h1>
+
+<h3> Select A Dog To Create An Appointment: </h3>
+
+<form method='POST' action='/appointments'>
+
+    <% @dogs.each do |dog| %>
+        <input type='checkbox' name='appt_dog' id='dog_<%= dog.id %>' value='<%= dog.id %>'><%= dog.name.capitalize! %> the <%= dog.breed.name %> (Shelter: <%= dog.shelter.name %>)
+        <br>
+    <% end %>
+    <input type='submit' value='Create Appointment' id='submit'>
+</form>
