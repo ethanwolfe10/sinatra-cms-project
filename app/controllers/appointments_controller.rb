@@ -7,7 +7,9 @@ class AppointmentsController < ApplicationController
             @current_doctor = Doctor.find_by(id: session[:user_id])
             @shelters = Shelter.all.select {|shelter| shelter.doctors.include?(@current_doctor)}
             @shelters.each do |shelter|
-                @dogs = shelter.dogs
+                shelter.dogs.each do |dog|
+                    @dogs << dog
+                end
             end
             erb :'/appointments/new'
         else
@@ -19,8 +21,12 @@ class AppointmentsController < ApplicationController
         #if logged in view all appts for doctor
         if session[:user_id]
             @current_doctor = Doctor.find_by_slug(params[:slug])
-            
+            @appts = DoctorDog.all.select {|appt| appt.doctor_id == session[:user_id]}
+            erb :'/appointments/show'
+        else
+            redirect '/doctors/login'
         end
+
     end
 
     post '/appointments' do
@@ -28,7 +34,6 @@ class AppointmentsController < ApplicationController
         if session[:user_id]
             @current_doctor = Doctor.find_by(id: session[:user_id])
            new_appt = DoctorDog.create(doctor_id: session[:user_id], dog_id: params["appt_dog"], date: params["date"], time: params["time"])
-           binding.pry
            redirect "/appointments/#{@current_doctor.slug}"
         else
             redirect '/doctors/login'
