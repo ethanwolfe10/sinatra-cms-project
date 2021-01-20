@@ -44,6 +44,8 @@ class DoctorsController < ApplicationController
     get '/doctors/logout' do
         if session[:user_id]
             erb :'/doctors/logout'
+        else
+            redirect '/doctors/login'
         end
     end
 
@@ -58,19 +60,20 @@ class DoctorsController < ApplicationController
 
     get '/doctors/:slug' do
         #if logged in view all their information ie appts
-    end
-
-    get '/doctors/:slug/edit' do
-        #if logged in view the edit page
-        #else redirect to '/login'
-    end
-
-    patch '/doctors/:slug/edit' do
-        #takes params and updates the current_doctor object
-    end
-
-    delete '/doctors/:slug/delete' do
-        #deletes doctor object
+        if session[:user_id]
+            @dogs = []
+            @current_user = Doctor.find_by_slug(params[:slug])
+            @appts = DoctorDog.all.select {|appt| appt.doctor_id == session[:user_id]}
+            @shelters = Shelter.all.select {|shelter| shelter.doctors.include?(@current_user)}
+            @shelters.each do |shelter|
+                shelter.dogs.each do |dog|
+                    @dogs << dog
+                end
+            end
+            erb :'/doctors/show'
+        else
+            redirect '/doctors/login'
+        end
     end
 
 end

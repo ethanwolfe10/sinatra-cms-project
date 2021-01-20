@@ -1,0 +1,33 @@
+<h1> Welcome <%= @current_user.username %>! </h1>
+
+<h3>Here Are All of Your Patients: </h3>
+
+<% @dogs.each do |dog| %>
+    <p><%= dog.name %> the <%=dog.breed.name %></p>
+<% end %>
+
+<br>
+
+
+<h3>Here Are All of Your Active Shelters: </h3>
+
+<% @shelters.each do |shelter| %>
+    <p><%= shelter.name %>: </p>
+    <ul>
+        <li>-Website: <%= shelter.website %></li>
+        <li>-Address: <%= shelter.address %></li>
+        <br>
+    </ul>
+<% end %>
+   
+<br>
+
+
+<h3>Here Are All of Your Appointments: </h3>  
+<ul>    
+    <% @appts.each do |appt| %>
+        <% dog = Dog.find_by(id: appt.dog_id) %>
+        <li>-<%= dog.name %> the <%= dog.breed.name %> (<%= appt.date %> at <%= appt.time %> @ <%= dog.shelter.name %>)</li>
+        <br>
+    <% end %>
+</ul> 
