@@ -20,7 +20,6 @@ class AppointmentsController < ApplicationController
     get '/appointments/:slug' do
         #if logged in view all appts for doctor
         if session[:user_id]
-            @dogs = []
             @current_doctor = Doctor.find_by_slug(params[:slug])
             @appts = DoctorDog.all.select {|appt| appt.doctor_id == session[:user_id]}
             erb :'/appointments/show'
@@ -43,14 +42,34 @@ class AppointmentsController < ApplicationController
 
     get '/appointments/:slug/edit' do
         #if logged in view the appt edit page
+        if session[:user_id]
+            @current_doctor = Doctor.find_by_slug(params[:slug])
+            @appts = DoctorDog.all.select {|appt| appt.doctor_id == session[:user_id]}
+            erb :'/appointments/edit'
+        else
+            redirect '/doctors/login'
+        end
     end
 
-    patch '/appointments/edit' do
-        #updates appointment details
+    patch '/appointments/:slug/edit' do
+        if session[:user_id]
+            new_appt = DoctorDog.find_by(id: params["appt_id"])
+            new_appt.update(date: params["date"], time: params["time"])
+            new_appt.save
+            redirect "/appointments/#{@current_doctor.slug}"
+        else
+            redirect '/doctors/login'
+        end
     end
 
-    delete '/appointments/delete' do
-        #deletes appt
+    delete '/appointments/:slug/edit' do
+       if session[:user_id]
+        appt = DoctorDog.find_by(id: params["appt_id"])
+        appt.destroy
+        redirect "/appointments/#{@current_doctor.slug}"
+       else
+        redirect '/doctors/login'
+       end
     end
 
 end

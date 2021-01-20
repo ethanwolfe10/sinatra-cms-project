@@ -1,0 +1,32 @@
+<h1> Welcome <%= @current_doctor.username %>! </h1>
+
+<h3> Select the Appointment You Would Like to Edit: </h3>
+
+<form action='/appointments/<%= @current_doctor.slug %>/edit' method="POST">
+    <input id="hidden" type="hidden" name="_method" value="patch">
+    <% @appts.each do |appt| %>
+        <% dog = Dog.find_by(id: appt.dog_id) %>
+        <input type='checkbox' name='appt_id' id='appt_<%= appt.id %>' value='<%= appt.id %>'><%= dog.name %> the <%= dog.breed.name %> (<%= appt.date %> at <%= appt.time %> @ <%= dog.shelter.name %>) <br>
+    <% end %>
+
+    <form method='post'>
+        <input id="hidden" type="hidden" name="_method" value="delete">
+        <input type='submit' value='Delete This Appointment?' id='submit'>
+    </form>
+
+    <br>
+    <br>
+
+    <p>OR:</p>
+
+    <h3>Please Fill Out All Fields To Edit</h3>
+
+    <label>Appointment Date: </label>
+    <input type="text" name='date' id='date' value='DD/MM/YYYYY'>
+    <label>Appointment Time: </label>
+    <input type="text" name='time' id='time' value='TI:ME'>
+    <br>
+    <input type='submit' id='submit' value='Update Appointment'>
+    
+</form>
+
