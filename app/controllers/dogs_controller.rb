@@ -1,5 +1,21 @@
 class DogsController < ApplicationController
 
+    get '/dogs' do
+        if session[:user_id]
+            @current_doctor = Doctor.find_by(id: session[:user_id])
+            @dogs = []
+            @shelters = Shelter.all.select {|shelter| shelter.doctors.include?(@current_doctor)}
+            @shelters.each do |shelter|
+                shelter.dogs.each do |dog|
+                    @dogs << dog
+                end
+            end
+            erb :'/dogs/index'
+        else
+            redirect '/doctors/login'
+        end
+    end
+
     get '/dogs/new' do
         #if logged in, view the new dog view
         #show all shelters or option to create a new shelter
@@ -56,22 +72,37 @@ class DogsController < ApplicationController
                     new_dog.save
                 end 
             end
-            binding.pry
             redirect "/dogs/#{new_dog.slug}"
         else
             redirect '/doctors/login'
         end
     end
 
-    get '/dogs/:id/edit' do
-        #edits dogs that belong to doctor
+    get '/dogs/:slug/edit' do
+        if session[:user_id]
+            @dog = Dog.find_by_slug(params[:slug])
+            @current_doctor = Doctor.find_by(id: params[:user_id])
+            erb :'/dogs/edit'
+        else
+            redirect '/doctors/login'
+        end
     end
 
-    post '/dogs/edit' do
+    patch '/dogs/:slug/edit' do
         #updates dog information with params
+        if session[:user_id]
+            erb :'/'
+        else
+            redirect '/doctors/login'
+        end
     end
 
     delete '/dogs/delete' do
         #deletes dog object
+        if session[:user_id]
+            erb :'/'
+        else
+            redirect '/doctors/login'
+        end
     end
 end

@@ -1,0 +1,20 @@
+<h1> Welcome <%= @current_doctor.username %>! </h1>
+
+<h3> Fill Out Fields To Edit <%= @dog.name %>'s Information: </h3>
+
+<form method='post' action="/dogs/<%= @dog.slug %>/edit">
+    <input id="hidden" type="hidden" name="_method" value="patch">
+
+    <label>Dog's Name: </label>
+    <input type='text' id='name' name='name'>
+    <label>Dog's Breed: </label>
+    <input type='text' id='breed' name='breed'>
+    <label>Dog's Shelter: </label>
+    <input type='text' id='shelter' name='shelter'>
+    <br>
+    <label>Dog's Description: </label>
+    <input type='text' id='desc' name='desc'>
+    <br>
+    <input type='submit' id='submit' value='Update <%= @dog.name %>'s Information'>
+
+</form>
