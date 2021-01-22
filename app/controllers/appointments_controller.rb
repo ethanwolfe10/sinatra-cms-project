@@ -53,23 +53,21 @@ class AppointmentsController < ApplicationController
 
     patch '/appointments/:slug/edit' do
         if session[:user_id]
-            new_appt = DoctorDog.find_by(id: params["appt_id"])
-            new_appt.update(date: params["date"], time: params["time"])
-            new_appt.save
-            redirect "/appointments/#{@current_doctor.slug}"
+            @current_doctor = Doctor.find_by_slug(params[:slug])
+            if params["delete"]
+                binding.pry
+                appt = DoctorDog.find_by(id: params["appt_id"])
+                appt.destroy
+                redirect "/appointments/#{@current_doctor.slug}"
+            elsif params["edit"]
+                new_appt = DoctorDog.find_by(id: params["appt_id"])
+                new_appt.update(date: params["date"], time: params["time"])
+                new_appt.save
+                redirect "/appointments/#{@current_doctor.slug}"
+            end
         else
             redirect '/doctors/login'
         end
-    end
-
-    delete '/appointments/:slug/edit' do
-       if session[:user_id]
-        appt = DoctorDog.find_by(id: params["appt_id"])
-        appt.destroy
-        redirect "/appointments/#{@current_doctor.slug}"
-       else
-        redirect '/doctors/login'
-       end
     end
 
 end

@@ -7,14 +7,13 @@
 
     <label>Dog's Name: </label>
     <input type='text' id='name' name='name'>
-    <label>Dog's Breed: </label>
-    <input type='text' id='breed' name='breed'>
     <label>Dog's Shelter: </label>
     <input type='text' id='shelter' name='shelter'>
     <br>
     <label>Dog's Description: </label>
     <input type='text' id='desc' name='desc'>
     <br>
-    <input type='submit' id='submit' value='Update <%= @dog.name %>'s Information'>
-
+    <input type='submit' name='edit' value="Update <%= @dog.name %>'s Information">
+    <p> OR </p>
+    <input type='submit' value='Delete Dog?' name='delete'>
 </form>

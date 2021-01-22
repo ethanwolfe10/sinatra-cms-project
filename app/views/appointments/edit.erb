@@ -9,24 +9,21 @@
         <input type='checkbox' name='appt_id' id='appt_<%= appt.id %>' value='<%= appt.id %>'><%= dog.name %> the <%= dog.breed.name %> (<%= appt.date %> at <%= appt.time %> @ <%= dog.shelter.name %>) <br>
     <% end %>
 
-    <form method='post'>
-        <input id="hidden" type="hidden" name="_method" value="delete">
-        <input type='submit' value='Delete This Appointment?' id='submit'>
-    </form>
-
+    
     <br>
     <br>
 
-    <p>OR:</p>
+    <input type='submit' value='Delete This Appointment?' name='delete'>
 
-    <h3>Please Fill Out All Fields To Edit</h3>
+    <p> OR </p>
+
+    <h3> Fill Out All Fields To Edit Appointment</h3>
 
     <label>Appointment Date: </label>
     <input type="text" name='date' id='date' value='DD/MM/YYYYY'>
     <label>Appointment Time: </label>
     <input type="text" name='time' id='time' value='TI:ME'>
     <br>
-    <input type='submit' id='submit' value='Update Appointment'>
+    <input type='submit' name='edit' value='Update Appointment'>
     
 </form>
-
