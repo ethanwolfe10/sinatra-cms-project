@@ -43,13 +43,14 @@ class DoctorsController < ApplicationController
 
     get '/doctors/logout' do
         if session[:user_id]
+            @current_doctor = Doctor.find_by(id: session[:user_id])
             erb :'/doctors/logout'
         else
             redirect '/doctors/login'
         end
     end
 
-    post '/logout' do
+    get '/doctors/:slug/logout' do
         if session[:user_id] 
             session.clear
             redirect '/doctors/login'
@@ -59,12 +60,11 @@ class DoctorsController < ApplicationController
     end
 
     get '/doctors/:slug' do
-        #if logged in view all their information ie appts
         if session[:user_id]
             @dogs = []
-            @current_user = Doctor.find_by_slug(params[:slug])
+            @current_doctor = Doctor.find_by_slug(params[:slug])
             @appts = DoctorDog.all.select {|appt| appt.doctor_id == session[:user_id]}
-            @shelters = Shelter.all.select {|shelter| shelter.doctors.include?(@current_user)}
+            @shelters = Shelter.all.select {|shelter| shelter.doctors.include?(@current_doctor)}
             @shelters.each do |shelter|
                 shelter.dogs.each do |dog|
                     @dogs << dog

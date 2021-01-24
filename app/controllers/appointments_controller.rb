@@ -17,6 +17,15 @@ class AppointmentsController < ApplicationController
         end
     end
 
+    get '/appointments' do
+        if session[:user_id]
+            @current_doctor = Doctor.find_by(id: session[:user_id])
+            redirect "/appointments/#{@current_doctor.slug}"
+        else
+            redirect '/doctors/login'
+        end
+    end
+
     get '/appointments/:slug' do
         #if logged in view all appts for doctor
         if session[:user_id]
@@ -55,7 +64,6 @@ class AppointmentsController < ApplicationController
         if session[:user_id]
             @current_doctor = Doctor.find_by_slug(params[:slug])
             if params["delete"]
-                binding.pry
                 appt = DoctorDog.find_by(id: params["appt_id"])
                 appt.destroy
                 redirect "/appointments/#{@current_doctor.slug}"

@@ -1,8 +1,10 @@
 <% if Helpers.is_logged_in?(session) %>
-
+<h1> Welcome <%= @current_doctor.username.capitalize! %>! </h1>
+<br>
+<p style="text-align: center;">Click Here to <a href="/doctors/<%= @current_doctor.slug %>/logout">Logout</a></p>
   <form action="/logout" method="post">
-    Logout?
-    <input type="submit" name="logout" >
+    
+    
   </form>
 
 <% end %>

@@ -1,0 +1,21 @@
+<h1> Welcome <%= @current_doctor.username.capitalize! %>! </h1>
+<br>
+<h2 style="border-top: 0px;">Here Are All of Your Active Shelters: </h2>
+
+
+<% @shelters.each do |shelter| %>
+    <div class="dog_div">
+    <h2 class="shelter" style="border-top: 0px;"><%= shelter.name %>: (Website - <%= shelter.website %>)</h2>
+        <div class="dog">
+            <h4 style='text-align: left; color: sandybrown;'>Dogs: </h4>
+        
+            <% @dogs.each do |dog| %>
+                <% if shelter.id == dog.shelter_id %>
+                    <p><a href='/dogs/<%= dog.slug %>'><%= dog.name %> the <%=dog.breed.name %></a></p>
+                <% end %>
+            <% end %>
+            <br>
+        </div>
+    </div>
+<% end %>
+     

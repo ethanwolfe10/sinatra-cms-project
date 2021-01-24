@@ -1,14 +1,17 @@
 <h1> Welcome <%= @current_doctor.username.capitalize! %>! </h1>
 
-<h3> Here is <%= @dog.name.capitalize! %>'s information: </h3>
-
-    <ul>
-        <li>Breed: <%= @dog.breed.name %> </li>
-        <li>Age: <%= @dog.age %></li>
-        <li>Shelter: <%= @dog.shelter.name %> </li>
-            <ol>
-                <li> Address: <%= @dog.shelter.address %> </li>
-                <li> Website: <%= @dog.shelter.website %> </li>
-            </ol>
-        <li>Description: <%= @dog.desc %> </li>
-    </ul>
+<h2> Here is <%= @dog.name %>'s information: </h2>
+    
+    <div class="dog_div">
+        <div class="dog">
+            <p>Breed: <%= @dog.breed.name %> </p>
+            <p>Age: <%= @dog.age %></p>
+            <p>Shelter: <%= @dog.shelter.name %> </p>
+            <p> Address: <%= @dog.shelter.address %> </p>
+            <p> Website: <%= @dog.shelter.website %> </p>
+            
+        </div>
+        <p>Description: <%= @dog.desc %> </p>
+        <h5 style="text-align: center;">(Click <a href="dogs/<%= @dog.slug %>/edit">Here</a> to Edit)</h5>
+    </div>
+    
