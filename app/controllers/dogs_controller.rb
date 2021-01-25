@@ -46,42 +46,35 @@ class DogsController < ApplicationController
                     selected_shelter.doctors << current_doctor
                 end          
                 if params["breed_name"] == ''
-                    new_dog = Dog.create(name: params["dog_name"].capitalize!, age: params["dog_age"], breed_id: params["breed_id"], shelter_id: params["shelter_id"])
+                    new_dog = Dog.create(name: params["dog_name"], age: params["dog_age"], breed_id: params["breed_id"], shelter_id: params["shelter_id"])
                     new_dog.save
                 else
-                    if Breed.find_by(name: params["breed_name"])
-                        #flash message with breed is aleady created
-                        redirect '/dogs/new'
-                    else
-                        new_breed = Breed.create(name: params["breed_name"].capitalize!)
+                    if !Breed.find_by(name: params["breed_name"]) 
+                        new_breed = Breed.create(name: params["breed_name"])
                         new_breed.save
-                        new_dog = Dog.create(name: params["dog_name"].capitalize!, age: params["dog_age"], breed_id: new_breed.id, shelter_id: new_shelter.id)
+                        new_dog = Dog.create(name: params["dog_name"], age: params["dog_age"], breed_id: new_breed.id, shelter_id: params["shelter_id"])
                         new_dog.save
                     end
                 end
             else
-                if Shelter.find_by(name: params["shelter"]["name"])
-                    new_shelter = Shelter.new(name: params["shelter"]["name"].capitalize!, address: params["shelter"]["address"], website: params["shelter"]["website"])
+                if !Shelter.find_by(name: params["shelter"]["name"])
+                    new_shelter = Shelter.new(name: params["shelter"]["name"], address: params["shelter"]["address"], website: params["shelter"]["website"])
                     new_shelter.save
                     new_shelter.doctors << current_doctor
                     if params["breed_name"] == ''
-                        new_dog = Dog.create(name: params["dog_name"].capitalize!, age: params["dog_age"], breed_id: params["breed_id"], shelter_id: new_shelter.id)
+                        new_dog = Dog.create(name: params["dog_name"], age: params["dog_age"], breed_id: params["breed_id"], shelter_id: new_shelter.id)
                         new_dog.save  
-                    else
-                        if Breed.find_by(name: params["breed_name"])
-                            #flash message with breed is aleady created
-                            redirect '/dogs/new'
-                        else
-                            new_breed = Breed.create(name: params["breed_name"].capitalize!)
+                    else  
+                        if !Breed.find_by(name: params["breed_name"]) 
+                            new_breed = Breed.create(name: params["breed_name"])
                             new_breed.save
-                            new_dog = Dog.create(name: params["dog_name"].capitalize!, age: params["dog_age"], breed_id: new_breed.id, shelter_id: new_shelter.id)
+                            new_dog = Dog.create(name: params["dog_name"], age: params["dog_age"], breed_id: new_breed.id, shelter_id: new_shelter.id)
                             new_dog.save
                         end
                     end
                 else
-                    #flash message with shelter already exsists
                     redirect '/dogs/new'
-                end 
+                end
             end
             redirect "/dogs/#{new_dog.slug}"
         else
@@ -103,11 +96,11 @@ class DogsController < ApplicationController
         #updates dog information with params
         if session[:user_id]
             if params["delete"]
-                dog = Dog.find_by(name: params["name"].downcase)
+                dog = Dog.find_by_slug(params[:slug])
                 dog.destroy
                 redirect '/dogs'
             elsif params["edit"]
-                new_dog = Dog.find_by(name: params["name"].downcase)
+                new_dog = Dog.find_by_slug(params[:slug])
                 new_dog.update(name: params["name"], shelter_id: Shelter.find_by(name: params["shelter"]).id, desc: params["desc"])
                 new_dog.save
                 redirect "/dogs/#{new_dog.slug}"

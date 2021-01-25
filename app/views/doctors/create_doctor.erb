@@ -1,6 +1,8 @@
 
 <% if !Helpers.is_logged_in?(session) %>
-<h1> Welcome <%= @current_doctor.username.capitalize! %>! </h1>
+<h1> Sign Up Here! </h1>
+<br>
+<br>
     <form method='POST' action='/doctors/signup'>
         
         <label>Create Username: </label>

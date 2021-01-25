@@ -10,5 +10,5 @@
             <p>-<%= dog.name %> the <%= dog.breed.name %> (<%= appt.date %> at <%= appt.time %> @ <%= dog.shelter.name %>)</p>
             <br>
             <% end %>
-         Click <a href="/appointments/<%= @current_doctor.slug %>/edit">Here</a> To Edit Appointments
+            <p style='text-align: center;'>(Click <a href="/appointments/<%= @current_doctor.slug %>/edit">Here</a> To Edit Appointments) Or (Click <a href="/appointments/new">Here</a> to Create Appointments)</p>
     <% end %>
