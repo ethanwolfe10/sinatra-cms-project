@@ -1,19 +1,38 @@
 <h1> Welcome <%= @current_doctor.username.capitalize! %>! </h1>
 
-<h3> Select A Dog To Create An Appointment: </h3>
+
 
 <form method='POST' action='/appointments'>
 
-    <% @dogs.each do |dog| %>
-        <input type='checkbox' name='appt_dog' id='dog_<%= dog.id %>' value='<%= dog.id %>'><%= dog.name.capitalize! %> the <%= dog.breed.name %> (Shelter: <%= dog.shelter.name %>)
-        <br>
-    <% end %>
-    <br>
-    <br>
-    <h3>Enter In Date/Time of Appointment </h3>
+    <h2 style="border-top: 0px;">Enter In Date/Time of Appointment </h2>
     <label>Date: </label>
     <input type='text' id='date' name='date' value='MM/DD/YYYY'>
     <label>Time: </label>
     <input type='text' id='time' name='time' value='TI:ME'>
+    
+
+    <br>
+    <br>
+
+    <h2> Select A Dog To Create An Appointment: </h2>
+    <% @shelters.each do |shelter| %>
+        <div class="dog_div">
+        <h2 class="shelter" style="border-top: 0px;" ><%= shelter.name %>: (Website - <%= shelter.website %>)</h2>
+            <div class="dog">
+                <h4 style='text-align: left; color: sandybrown;'>Dogs: </h4>
+            
+                <% @dogs.each do |dog| %>
+                    <% if shelter.id == dog.shelter_id %>
+                        <input type='checkbox' name='appt_dog' id='dog_<%= dog.id %>' value='<%= dog.id %>'><%= dog.name %> the <%= dog.breed.name %>
+                        <br>
+                    <% end %>
+                <% end %>
+                <br>
+            </div>
+        </div>
+    <% end %>
+
+    <br>
     <input type='submit' value='Create Appointment' id='submit'>
+    
 </form>
