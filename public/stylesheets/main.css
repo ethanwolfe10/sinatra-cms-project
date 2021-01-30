@@ -30,13 +30,65 @@
     width: 85%;
   }
 
+  .shelter {
+    color: steelblue;
+    text-align: center;
+    text-decoration: underline;
+  }
+
+  .shelter_info {
+    color: cornflowerblue;
+    text-align: center;
+    text-decoration: italicize;
+  }
+
+  .dog_div {
+    width: 55%;
+    margin: 2px auto;
+    margin-left: 200px;
+    margin-right: 200px;
+    text-align: left;
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,.3);
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,.3);
+    box-shadow: 0 0 10px rgba(0,0,0,.3);
+    padding: 1.25%;
+  }
+
+  .dog {
+    width: 50%;
+    margin: 2px auto;
+    text-align: center;
+  }
+
   h1 {
     font-size: 36px;
     line-height: 54px;
+    text-align: center;
+    border-bottom: 2px solid cornflowerblue;
+  }
+
+  .navbar {
+    overflow: hidden;
+    background-color: antiquewhite;
+    position: absolute;
+  }
+
+  .navbar a {
+    float: left;
+    color: cornflowerblue;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+
+  .navbar a:hover {
+    background-color: cornflowerblue;
+    color: wheat;
   }
 
   h2 {
-    border-bottom: 2px solid #ccc;
+    border-top: 1px solid wheat;
     font-size: 24px;
     line-height: 36px;
     margin-bottom: 16px;
@@ -45,6 +97,10 @@
   h3 {
     font-size: 18px;
     line-height: 36px;
+  }
+
+  input[type="checkbox"] {
+    width: 20px;
   }
 
   p {
@@ -89,6 +145,10 @@
     -webkit-box-shadow: none;
     box-shadow: none;
     width: auto;
+  }
+
+  .test {
+    border-bottom: 2px solid steelblue;
   }
 
   .content, .sidebar {

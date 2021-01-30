@@ -11,17 +11,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 5) do
+ActiveRecord::Schema.define(version: 6) do
 
-  create_table "appointments", force: :cascade do |t|
+  create_table "breeds", force: :cascade do |t|
+    t.string "name"
+  end
+
+  create_table "doctor_dogs", force: :cascade do |t|
+    t.string   "date"
+    t.string   "time"
     t.integer  "dog_id"
     t.integer  "doctor_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "breeds", force: :cascade do |t|
-    t.string "name"
+  create_table "doctor_shelters", force: :cascade do |t|
+    t.integer "shelter_id"
+    t.integer "doctor_id"
   end
 
   create_table "doctors", force: :cascade do |t|
@@ -32,6 +39,7 @@ ActiveRecord::Schema.define(version: 5) do
 
   create_table "dogs", force: :cascade do |t|
     t.string  "name"
+    t.string  "desc"
     t.integer "age"
     t.integer "breed_id"
     t.integer "shelter_id"
