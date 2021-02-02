@@ -18,21 +18,25 @@
 
 <h2 style="border-top: 0px;">Here Are All of Your Active Shelters: </h2>
 <br>
-<p style='text-align: center;'>(Click <a href="/dogs/new"> Here </a> to Add a New Dog)</p>
-<% @shelters.each do |shelter| %>
-    <div class="dog_div">
-    <h2 class="shelter" style="border-top: 0px;"><%= shelter.name %>: (Website - <%= shelter.website %>)</h2>
-        <div class="dog">
-            <h4 style='text-align: left; color: sandybrown;'>Dogs: </h4>
-        
-            <% @dogs.each do |dog| %>
-                <% if shelter.id == dog.shelter_id %>
-                    <p><a href='/dogs/<%= dog.slug %>'><%= dog.name %> the <%=dog.breed.name %></a></p>
+<% if @shelters.empty? %>
+    <p style='text-align: center;'>You Have No Active Shelters! Click <a href="/doctors/<%= @current_doctor.slug %>/newshelter"> Here </a> to Add Your First!
+<% else %>
+    <p style='text-align: center;'>(Click <a href="/dogs/new"> Here </a> to Add a New Dog)</p>
+    <% @shelters.each do |shelter| %>
+        <div class="dog_div">
+        <h2 class="shelter" style="border-top: 0px;"><%= shelter.name %>: (Website - <%= shelter.website %>)</h2>
+            <div class="dog">
+                <h4 style='text-align: left; color: sandybrown;'>Dogs: </h4>
+            
+                <% @dogs.each do |dog| %>
+                    <% if shelter.id == dog.shelter_id %>
+                        <p><a href='/dogs/<%= dog.slug %>'><%= dog.name %> the <%=dog.breed.name %></a></p>
+                    <% end %>
                 <% end %>
-            <% end %>
-            <br>
+                <br>
+            </div>
         </div>
-    </div>
+    <% end %>
 <% end %>
    
 <br>

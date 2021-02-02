@@ -59,6 +59,7 @@ class DoctorsController < ApplicationController
         end
     end
 
+
     get '/doctors/:slug' do
         if session[:user_id]
             @dogs = []
@@ -75,5 +76,31 @@ class DoctorsController < ApplicationController
             redirect '/doctors/login'
         end
     end
+
+    get '/doctors/:slug/newshelter' do
+        if session[:user_id]
+            @current_doctor = Doctor.find_by(id: session[:user_id])
+            erb :'/doctors/new_shelter'
+        else
+            redirect '/doctors/login'
+        end
+    end
+
+    post '/doctors/newshelter' do
+        if session[:user_id]
+            @current_doctor = Doctor.find_by(id: session[:user_id])
+            if !Shelter.find_by(name: params["shelter"]["name"])
+                new_shelter = Shelter.new(name: params["shelter"]["name"], address: params["shelter"]["address"], website: params["shelter"]["website"])
+                new_shelter.save
+                new_shelter.doctors << @current_doctor
+                redirect '/dogs/new'
+            else
+                redirect '/doctors/newshelter'
+            end
+        else
+            redirect '/doctors/login'
+        end
+    end    
+
 
 end

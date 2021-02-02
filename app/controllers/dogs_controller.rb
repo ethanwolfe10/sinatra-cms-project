@@ -19,9 +19,13 @@ class DogsController < ApplicationController
     get '/dogs/new' do
         if session[:user_id]
             @current_doctor = Doctor.find_by(id: session[:user_id])
-            @shelters = Shelter.all
-            @breeds = Breed.all
-            erb :'/dogs/new'
+            if @current_doctor.shelters.empty?
+                redirect "/doctors/#{@current_doctor.slug}/newshelter"
+            else
+                @shelters = Shelter.all.select {|shelter| shelter.doctors.include?(@current_doctor)}
+                @breeds = Breed.all
+                erb :'/dogs/new'
+            end
         else
             redirect '/doctors/login'
         end
@@ -29,8 +33,8 @@ class DogsController < ApplicationController
 
     get '/dogs/:slug' do
         if session[:user_id]
-            @dog = Dog.find_by_slug(params[:slug])
             @current_doctor = Doctor.find_by(id: session[:user_id])
+            @dog = Dog.find_by_slug(params[:slug])         
             erb :'/dogs/show'
         else
             redirect '/doctors/login'
@@ -39,39 +43,22 @@ class DogsController < ApplicationController
 
     post '/dogs' do
         if session[:user_id]
+            new_dog_name = params["dog_name"]
+            new_dog_name = new_dog_name.capitalize
             current_doctor = Doctor.find_by(id: session[:user_id])
-            if params["shelter"]["name"] == ""
-                selected_shelter = Shelter.find_by(id: params["shelter_id"])
-                if !selected_shelter.doctors.include?(current_doctor)
-                    selected_shelter.doctors << current_doctor
-                end          
-                if params["breed_name"] == ''
-                    new_dog = Dog.create(name: params["dog_name"], age: params["dog_age"], breed_id: params["breed_id"], shelter_id: params["shelter_id"])
-                    new_dog.save
-                else
-                    if !Breed.find_by(name: params["breed_name"]) 
-                        new_breed = Breed.create(name: params["breed_name"])
-                        new_breed.save
-                        new_dog = Dog.create(name: params["dog_name"], age: params["dog_age"], breed_id: new_breed.id, shelter_id: params["shelter_id"])
-                        new_dog.save
-                    end
-                end
+            selected_shelter = Shelter.find_by(id: params["shelter_id"])
+            if !selected_shelter.doctors.include?(current_doctor)
+                selected_shelter.doctors << current_doctor
+            end          
+            if params["breed_name"] == ''
+                new_dog = Dog.create(name: new_dog_name, age: params["dog_age"], breed_id: params["breed_id"], shelter_id: params["shelter_id"])
+                new_dog.save
             else
-                if !Shelter.find_by(name: params["shelter"]["name"])
-                    new_shelter = Shelter.new(name: params["shelter"]["name"], address: params["shelter"]["address"], website: params["shelter"]["website"])
-                    new_shelter.save
-                    new_shelter.doctors << current_doctor
-                    if params["breed_name"] == ''
-                        new_dog = Dog.create(name: params["dog_name"], age: params["dog_age"], breed_id: params["breed_id"], shelter_id: new_shelter.id)
-                        new_dog.save  
-                    else  
-                        if !Breed.find_by(name: params["breed_name"]) 
-                            new_breed = Breed.create(name: params["breed_name"])
-                            new_breed.save
-                            new_dog = Dog.create(name: params["dog_name"], age: params["dog_age"], breed_id: new_breed.id, shelter_id: new_shelter.id)
-                            new_dog.save
-                        end
-                    end
+                if !Breed.find_by(name: params["breed_name"]) 
+                    new_breed = Breed.create(name: params["breed_name"])
+                    new_breed.save
+                    new_dog = Dog.create(name: new_dog_name, age: params["dog_age"], breed_id: new_breed.id, shelter_id: params["shelter_id"])
+                    new_dog.save
                 else
                     redirect '/dogs/new'
                 end

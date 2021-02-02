@@ -18,7 +18,7 @@
     
 
         <% @breeds.each do |breed| %>
-            <input type='checkbox' name='breed_id' id='breed_<%= breed.id %>' value='<%= breed.id %>'> <%= breed.name %>
+            <input type='radio' name='breed_id' id='breed_<%= breed.id %>' value='<%= breed.id %>'><%= breed.name %>
         <% end %>
 
     <br>
@@ -39,26 +39,12 @@
     
 
         <% @shelters.each do |shelter| %>
-            <input type='checkbox' name='shelter_id' id='shelter_<%= shelter.id %>' value='<%= shelter.id %>'><%= shelter.name %>
+            <input type='radio' name='shelter_id' id='shelter_<%= shelter.id %>' value='<%= shelter.id %>'><%= shelter.name %>  
         <% end %>
 
+    <br>  
     <br>
-    <br>
-    
-
-    <h3> Or Create A New Shelter: </h3>
-    <br>
-
-    <label> Shelter Name: </label>
-    <input type='text' name='shelter[name]' id='shelter[name]'>
-
-    <label> Shelter Address: </label>
-    <input type='text' name='shelter[address]' id='shelter[address]'>
-
-    <label> Shelter Website: </label>
-    <input type='text' name='shelter[website]' id='shelter[website]'>
-    <br>
-    <br>
+    <p style="text-align: center; font-size: 12px;"> (Or Click <a href="/doctors/new_shelter"> Here </a> to Create A New Shelter) </p>
     <input type='submit' value='Create Dog' id='submit'>
 </form>
         
