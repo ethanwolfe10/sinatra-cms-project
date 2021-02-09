@@ -2,10 +2,10 @@ class AppointmentsController < ApplicationController
     
     get '/appointments/new' do
         #if logged in view new appt page
-        if session[:user_id]
+        if Helpers.is_logged_in?(session)
             @dogs = []
-            @current_doctor = Doctor.find_by(id: session[:user_id])
-            @shelters = Shelter.all.select {|shelter| shelter.doctors.include?(@current_doctor)}
+            current_doctor(session)
+            @shelters = @current_doctor.shelters
             @shelters.each do |shelter|
                 shelter.dogs.each do |dog|
                     @dogs << dog
@@ -18,8 +18,8 @@ class AppointmentsController < ApplicationController
     end
 
     get '/appointments' do
-        if session[:user_id]
-            @current_doctor = Doctor.find_by(id: session[:user_id])
+        if Helpers.is_logged_in?(session)
+            current_doctor(session)
             redirect "/appointments/#{@current_doctor.slug}"
         else
             redirect '/doctors/login'
@@ -28,9 +28,9 @@ class AppointmentsController < ApplicationController
 
     get '/appointments/:slug' do
         #if logged in view all appts for doctor
-        if session[:user_id]
-            @current_doctor = Doctor.find_by_slug(params[:slug])
-            @appts = DoctorDog.all.select {|appt| appt.doctor_id == session[:user_id]}
+        if Helpers.is_logged_in?(session)
+            current_doctor(session)
+            @appts = @current_doctor.doctor_dogs
             erb :'/appointments/show'
         else
             redirect '/doctors/login'
@@ -40,10 +40,14 @@ class AppointmentsController < ApplicationController
 
     post '/appointments' do
         #creates appt with doctor_id and dog_id
-        if session[:user_id]
-            @current_doctor = Doctor.find_by(id: session[:user_id])
-           new_appt = DoctorDog.create(doctor_id: session[:user_id], dog_id: params["appt_dog"], date: params["date"], time: params["time"])
-           redirect "/appointments/#{@current_doctor.slug}"
+        if Helpers.is_logged_in?(session)
+            current_doctor(session)
+            if params["appt_dog"] && params["date"] && params["time"]
+                new_appt = DoctorDog.create(doctor_id: @current_doctor.id, dog_id: params["appt_dog"], date: params["date"], time: params["time"])
+                redirect "/appointments/#{@current_doctor.slug}"
+            else
+                redirect '/appointments/new'
+            end
         else
             redirect '/doctors/login'
         end
@@ -51,9 +55,9 @@ class AppointmentsController < ApplicationController
 
     get '/appointments/:slug/edit' do
         #if logged in view the appt edit page
-        if session[:user_id]
-            @current_doctor = Doctor.find_by_slug(params[:slug])
-            @appts = DoctorDog.all.select {|appt| appt.doctor_id == session[:user_id]}
+        if Helpers.is_logged_in?(session)
+            current_doctor(session)
+            @appts = @current_doctor.doctor_dogs
             erb :'/appointments/edit'
         else
             redirect '/doctors/login'
@@ -61,16 +65,20 @@ class AppointmentsController < ApplicationController
     end
 
     patch '/appointments/:slug/edit' do
-        if session[:user_id]
-            @current_doctor = Doctor.find_by_slug(params[:slug])
+        if Helpers.is_logged_in?(session)
+            
+            current_doctor(session)
             if params["delete"]
                 appt = DoctorDog.find_by(id: params["appt_id"])
-                appt.destroy
+                if appt.doctor_id == @current_doctor.id
+                    appt.destroy
+                end
                 redirect "/appointments/#{@current_doctor.slug}"
             elsif params["edit"]
                 new_appt = DoctorDog.find_by(id: params["appt_id"])
-                new_appt.update(date: params["date"], time: params["time"])
-                new_appt.save
+                if new_appt.doctor_id == @current_doctor.id
+                    new_appt.update(date: params["date"], time: params["time"])
+                end
                 redirect "/appointments/#{@current_doctor.slug}"
             end
         else

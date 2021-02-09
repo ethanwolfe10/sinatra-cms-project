@@ -5,11 +5,11 @@ class Dog < ActiveRecord::Base
     belongs_to :shelter 
 
     def slug
-        self.name.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '') + '-' + self.breed.name.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '') + '-' + "#{self.age}"
+        self.name.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '') + '-' + self.id.to_s
     end
 
     def self.find_by_slug(name)
-        found_slug = Dog.all.select {|dog| dog.slug == name}
-        found_slug[0]
+        name = name.split("-")
+        Dog.find_by(id: name[-1])
     end
 end

@@ -7,8 +7,7 @@
         <p style="border-bottom: 1px solid wheat;"></p>
     <% else %>
         <% @appts.each do |appt| %>
-            <% dog = Dog.find_by(id: appt.dog_id) %>
-            <p>-<%= dog.name %> the <%= dog.breed.name %> (<%= appt.date %> at <%= appt.time %> @ <%= dog.shelter.name %>)</p>
+            <p>-<%= appt.dog.name %> the <%= appt.dog.breed.name %> (<%= appt.date %> at <%= appt.time %> @ <%= appt.dog.shelter.name %>)</p>
             <br>
             <% end %>
             <p style='text-align: center;'>(Click <a href="/appointments/<%= @current_doctor.slug %>/edit">Here</a> To Edit Appointments) Or (Click <a href="/appointments/new">Here</a> to Create Appointments)</p>

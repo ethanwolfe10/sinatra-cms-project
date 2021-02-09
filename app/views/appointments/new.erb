@@ -23,7 +23,7 @@
             
                 <% @dogs.each do |dog| %>
                     <% if shelter.id == dog.shelter_id %>
-                        <input type='checkbox' name='appt_dog' id='dog_<%= dog.id %>' value='<%= dog.id %>'><%= dog.name %> the <%= dog.breed.name %>
+                        <input type='radio' name='appt_dog' id='dog_<%= dog.id %>' value='<%= dog.id %>'><%= dog.name %> the <%= dog.breed.name %>
                         <br>
                     <% end %>
                 <% end %>

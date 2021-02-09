@@ -1,11 +1,11 @@
 class DogsController < ApplicationController
 
     get '/dogs' do
-        if session[:user_id]
+        if Helpers.is_logged_in?(session)
+            #Refactor these
             @dogs = []
-            @current_doctor = Doctor.find_by(id: session[:user_id])
-            @shelters = Shelter.all.select {|shelter| shelter.doctors.include?(@current_doctor)}
-            @shelters.each do |shelter|
+            current_doctor(session)
+            @current_doctor.shelters.each do |shelter|
                 shelter.dogs.each do |dog|
                     @dogs << dog
                 end
@@ -17,14 +17,14 @@ class DogsController < ApplicationController
     end
 
     get '/dogs/new' do
-        if session[:user_id]
-            @current_doctor = Doctor.find_by(id: session[:user_id])
-            if @current_doctor.shelters.empty?
-                redirect "/doctors/#{@current_doctor.slug}/newshelter"
-            else
-                @shelters = Shelter.all.select {|shelter| shelter.doctors.include?(@current_doctor)}
+        if Helpers.is_logged_in?(session)
+            current_doctor(session)
+            if !@current_doctor.shelters.empty?
+                @shelters = @current_doctor.shelters
                 @breeds = Breed.all
                 erb :'/dogs/new'
+            else
+                redirect "/doctors/#{@current_doctor.slug}/newshelter"               
             end
         else
             redirect '/doctors/login'
@@ -32,8 +32,8 @@ class DogsController < ApplicationController
     end
 
     get '/dogs/:slug' do
-        if session[:user_id]
-            @current_doctor = Doctor.find_by(id: session[:user_id])
+        if Helpers.is_logged_in?(session)
+            current_doctor(session)
             @dog = Dog.find_by_slug(params[:slug])         
             erb :'/dogs/show'
         else
@@ -42,37 +42,32 @@ class DogsController < ApplicationController
     end
 
     post '/dogs' do
-        if session[:user_id]
-            new_dog_name = params["dog_name"]
-            new_dog_name = new_dog_name.capitalize
-            current_doctor = Doctor.find_by(id: session[:user_id])
-            selected_shelter = Shelter.find_by(id: params["shelter_id"])
-            if !selected_shelter.doctors.include?(current_doctor)
-                selected_shelter.doctors << current_doctor
-            end          
-            if params["breed_name"] == ''
-                new_dog = Dog.create(name: new_dog_name, age: params["dog_age"], breed_id: params["breed_id"], shelter_id: params["shelter_id"])
-                new_dog.save
-            else
-                if !Breed.find_by(name: params["breed_name"]) 
-                    new_breed = Breed.create(name: params["breed_name"])
-                    new_breed.save
-                    new_dog = Dog.create(name: new_dog_name, age: params["dog_age"], breed_id: new_breed.id, shelter_id: params["shelter_id"])
-                    new_dog.save
+        if Helpers.is_logged_in?(session)
+            if params["dog_name"] && params["shelter_id"] && params["dog_age"]
+                new_dog_name = params["dog_name"].capitalize
+                current_doctor(session)
+                selected_shelter = Shelter.find_by(id: params["shelter_id"])        
+                if params["breed_name"] == ''
+                    new_dog = Dog.create(name: new_dog_name, age: params["dog_age"], breed_id: params["breed_id"], shelter_id: params["shelter_id"])
                 else
-                    redirect '/dogs/new'
+                    if !Breed.find_by(name: params["breed_name"]) 
+                        new_breed = Breed.create(name: params["breed_name"].capitalize)
+                        new_dog = Dog.create(name: new_dog_name, age: params["dog_age"], breed_id: new_breed.id, shelter_id: params["shelter_id"])
+                    else
+                        redirect '/dogs/new'
+                    end
                 end
+                redirect "/dogs/#{new_dog.slug}"
             end
-            redirect "/dogs/#{new_dog.slug}"
         else
             redirect '/doctors/login'
         end
     end
 
     get '/dogs/:slug/edit' do
-        if session[:user_id]
+        if Helpers.is_logged_in?(session)
             @dog = Dog.find_by_slug(params[:slug])
-            @current_doctor = Doctor.find_by(id: session[:user_id])
+            current_doctor(session)
             erb :'/dogs/edit'
         else
             redirect '/doctors/login'
@@ -81,7 +76,7 @@ class DogsController < ApplicationController
 
     patch '/dogs/:slug/edit' do
         #updates dog information with params
-        if session[:user_id]
+        if Helpers.is_logged_in?(session)
             if params["delete"]
                 dog = Dog.find_by_slug(params[:slug])
                 dog.destroy
@@ -89,7 +84,6 @@ class DogsController < ApplicationController
             elsif params["edit"]
                 new_dog = Dog.find_by_slug(params[:slug])
                 new_dog.update(name: params["name"], shelter_id: Shelter.find_by(name: params["shelter"]).id, desc: params["desc"])
-                new_dog.save
                 redirect "/dogs/#{new_dog.slug}"
             end
         else

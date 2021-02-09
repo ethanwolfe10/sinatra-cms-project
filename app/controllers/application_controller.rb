@@ -19,4 +19,11 @@ class ApplicationController < Sinatra::Base
     erb :welcome
   end
 
+  helpers do
+    def current_doctor(session)
+      @current_doctor = Doctor.find_by(id: session[:user_id])
+      @current_doctor
+    end
+  end
+
 end

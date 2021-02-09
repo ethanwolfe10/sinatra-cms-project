@@ -175,9 +175,8 @@ dog_list.each do |name, dog_hash|
     p.save
 end
 
-admin = Doctor.create(username: 'admin', password: 'admin', email: 'admin@email')
+admin = Doctor.create(username: 'admin', password: 'admin')
 admin.save
 Shelter.all.each do |shelter|
     shelter.doctors << admin
-    admin.shelters << shelter 
 end

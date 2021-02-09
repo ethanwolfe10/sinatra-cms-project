@@ -6,13 +6,13 @@
     <input id="hidden" type="hidden" name="_method" value="patch">
 
     <label>Dog's Name: </label>
-    <input type='text' id='name' name='name'>
+    <input type='text' id='name' name='name' value='<%= @dog.name %>'>
     <br>
     <label>Dog's Shelter: </label>
-    <input type='text' id='shelter' name='shelter'>
+    <input type='text' id='shelter' name='shelter' value='<%= @dog.shelter.name %>'>
     <br>
     <label>Dog's Description: </label>
-    <input type='text' id='desc' name='desc'>
+    <input type='text' id='desc' name='desc' value='<%= @dog.desc %>'>
     <br>
     <br>
     <input type='submit' name='edit' value="Update <%= @dog.name %>'s Information">

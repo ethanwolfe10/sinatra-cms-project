@@ -6,7 +6,7 @@
     <input id="hidden" type="hidden" name="_method" value="patch">
     <% @appts.each do |appt| %>
         <% dog = Dog.find_by(id: appt.dog_id) %>
-        <input type='checkbox' name='appt_id' id='appt_<%= appt.id %>' value='<%= appt.id %>'><%= dog.name %> the <%= dog.breed.name %> (<%= appt.date %> at <%= appt.time %> @ <%= dog.shelter.name %>) <br>
+        <input type='radio' name='appt_id' id='appt_<%= appt.id %>' value='<%= appt.id %>'><%= dog.name %> the <%= dog.breed.name %> (<%= appt.date %> at <%= appt.time %> @ <%= dog.shelter.name %>) <br>
     <% end %>
 
     
