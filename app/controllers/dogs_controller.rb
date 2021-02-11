@@ -3,13 +3,7 @@ class DogsController < ApplicationController
     get '/dogs' do
         if Helpers.is_logged_in?(session)
             #Refactor these
-            @dogs = []
             current_doctor(session)
-            @current_doctor.shelters.each do |shelter|
-                shelter.dogs.each do |dog|
-                    @dogs << dog
-                end
-            end
             erb :'/dogs/index'
         else
             redirect '/doctors/login'

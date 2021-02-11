@@ -27,7 +27,7 @@
             <div class="dog">
                 <h4 style='text-align: left; color: sandybrown;'>Dogs: </h4>
             
-                <% @dogs.each do |dog| %>
+                <% shelter.dogs.each do |dog| %>
                     <% if shelter.id == dog.shelter_id %>
                         <p><a href='/dogs/<%= dog.slug %>'><%= dog.name %> the <%=dog.breed.name %></a></p>
                     <% end %>

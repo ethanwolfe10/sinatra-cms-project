@@ -67,11 +67,6 @@ class DoctorsController < ApplicationController
             current_doctor(session)
             @appts = @current_doctor.doctor_dogs
             @shelters = @current_doctor.shelters
-            @shelters.each do |shelter|
-                shelter.dogs.each do |dog|
-                    @dogs << dog
-                end
-            end
             erb :'/doctors/show'
         else
             redirect '/doctors/login'
